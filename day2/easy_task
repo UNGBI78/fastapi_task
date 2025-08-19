@@ -1,0 +1,20 @@
+1. pytest_tutorial
+  a. pytest . : 전체 테스트 ( ex. 1 / 0 = ZeroDivisionError [ 0으로 뭔가를 나눌수는 없음 ])
+  b. 버그는 "경계"를 좋아함 ( ex. int 의 경우 => -1, 0, 1 )
+
+2. coverage
+  a. coverage의 정의 : [ 한번이라도 실행된 코드 / 전체 코드 ]
+  b. poetry run coverage report -m ( 도움말 -m => --help ) : 실행이 안된 라인을 보고서 형식으로 받아본다.
+    • Stmts : 명령문의 총 갯수
+    • Miss : 실행되지 않은 명령문의 갯수
+    • Cover : 실행된 비율 ( omit[제외, 생략] 사용하지 않을 경우 전체 명령문을 인식 )
+  c. poetry run coverage html : 테스트 결과를 html 형식으로 받아본다.
+
+3. dev dependency ( 종속성 관리 )
+  a. 서버가 실행되는 도중에 필요한 종속성 ( ex. FastApi, Uvicorn, Pydantic )
+  b. 개발하는 도중에만 필요하고, 서버가 실행되는 도중에는 전혀 사용되지 않는 종속성
+   => 추측) 종속성 관리란 여러 모듈들을 필요한 곳에만 사용 되도록 분리하는 것?
+
+4. importance of testing
+  a. 코드와 프로젝트가 쌓일수록, 테스트의 중요성이 높아진다.
+  b. 테스트는 자신이 작성한 코드가 의도한 대로 동작하는지를 검증해줌
