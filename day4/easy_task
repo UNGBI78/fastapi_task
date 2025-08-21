@@ -1,0 +1,33 @@
+1. Tortoise-orm
+  a. Django orm이 async를 잘 지원하지 않던 시절, 이를 대신하기 위해 탄생한 orm 
+    => SQLAlchemy도 async를 지원하지만 Greenlet 을 통해서 사용됨 ( 사소하지만 직통은 아님 )
+    ★ 커다란 장점 !! Django와 90% 가까이 유사함 
+  b. cryptography : 비밀번호 방식으로 Mysql에 로그인 할 때 필요함
+  c. aerich : tortoise-orm 의 migration tool
+  d. pydantic_settings : 서버 동작에 필요한 변수들을 환경변수에서 읽어주거나 dot env 에서 읽어줌. 환경변수를 적절한 "파이썬 타입"으로 변환시켜줌
+  e. tomlkit : aerich가 의존함에도 불구하고 자동 설치가 되지 않기 때문에 수동으로 설치해줌
+
+2. Connection
+  a. connect_timeout : 서버와 데이터베이스는 사용량이 상당히 많고 자주함 => 사용할 연결을 즉시 끊지 않음
+  b. 데이터베이스에 최대로 맺어질 수 있는 커넥션 수 ( 커넥션 풀의 Max Size * Workers 의 수 )
+  c. connection의 갯수가 많아질 수록 트래픽이 갑작스럽게 쏟아질때 더욱 유연하게 대처 가능 ( 약칭 Surge ) 다만, 메모리 사용량도 많아짐
+
+3. MySQL
+  a. primary key 를 정할때 주의 해야하는 점
+    MySQL version 8 이상부터 innodb 가 default engine ( 예전 MyISAM )
+    innodb 의 특징 -> clustering index
+    primary key 를 기준으로 값이 비슷한 row들 끼리 disk 에서도 실제로 모여있음
+    일반적으로 HDD 사용 -> 랜덤 IO가 느리고, ★ 순차 IO가 빠름
+      => 순차적으로 증가하는 값으로 설정하면 굉장히 빠르게 읽을 수 있음 ( ex. 1 10 20 30 40 .. )
+        AUTO_INCREMENT 도 가능은 하지만 법칙을 정해서 하면 좋음
+
+4. 문자열
+  a. Text
+    => 길이 제한이 없거나 굉장히 길다. But Index 사용 불가함
+  b. Varchar
+    => 길이가 정해져 있거나 굉장히 짧다. But Index 사용 가능함
+  c. Where 조건을 필터로 적용할 일이 많기 때문에 Varchar를 주로 사용함 ( MySQL 의 Varchar의 경우 255 이하일 경우 차지 공간이 같음 )
+
+5. Class
+  a. 하나의 class 에 그 해당하는 모든 쿼리들을 한곳에 보관
+    => 추후에 관련된 작동 쿼리들을 찾아보기에 용이하고 관리도 쉬움
